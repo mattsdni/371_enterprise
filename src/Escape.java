@@ -4,8 +4,19 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by Matt on 10/17/2016.
- */
+ * Name: Matt Dennie
+ * Lab: 3
+ * Title: Which Way Out
+ * Course: CSCI 371
+ * Semester: Fall, 2016
+ * Instructor: Dr. Blaha
+ * Date: 10/29/2016
+ * Sources consulted: course slides on Dijkstra's algorithm, java docs
+ * Program description: Find best route out of Klingon ship army via graph
+ * Known Bugs: none
+ * Testing: data.txt supplied on class website, and 2 simple solutions on handout
+ **/
+
 public class Escape
 {
     /**
@@ -17,7 +28,6 @@ public class Escape
     {
         try
         {
-            int case_num = 1;
             FileReader fileReader = new FileReader(filename);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             int cases = Integer.parseInt(bufferedReader.readLine().trim());
@@ -54,7 +64,6 @@ public class Escape
                         }
                     }
                 }
-                case_num++;
                 findPath(graph_matrix, new Node(start_x, start_y, 0));
             }
         } catch (IOException e)
@@ -65,7 +74,7 @@ public class Escape
 
     /**
      * Computes the fastest path out of the ships
-     * Runtime:
+     * Runtime: O(nlg(n)), where n = x * y.
      * @param graph a graph of ships
      * @param enterprise the node where the enterprise is
      */
@@ -80,7 +89,6 @@ public class Escape
         for (int y = 0; y < graph[0].length; y++)
             for (int x = 0; x < graph.length; x++)
                 node_graph[x][y] = new  Node(x, y, graph[x][y]);
-
 
         // add the enterprise
         enterprise.d = 0;
@@ -99,13 +107,14 @@ public class Escape
             visited[u.x][u.y] = true;
             s.add(u);
 
-            // 'relax' (check neighbors)
+            // get neighbors
             List<Node> adjacentNodes = new LinkedList<>();
             adjacentNodes.add(node_graph[u.x][u.y-1]);
             adjacentNodes.add(node_graph[u.x][u.y+1]);
             adjacentNodes.add(node_graph[u.x+1][u.y]);
             adjacentNodes.add(node_graph[u.x-1][u.y]);
 
+            //relax
             for (Node v : adjacentNodes)
                 if (!s.contains(v))
                     if (v.d > u.d + v.w)
@@ -119,13 +128,11 @@ public class Escape
     private class Node implements Comparable
     {
         int x,y,w,d;
-        Node p;
         Node(int x, int y, int w)
         {
             this.x = x;
             this.y = y;
             this.w = w;
-            this.p = null;
             this.d = Integer.MAX_VALUE;
         }
 
@@ -142,6 +149,8 @@ public class Escape
         @Override
         public boolean equals(Object o)
         {
+            if (!(o instanceof Node))
+                return false ;
             Node n = (Node) o;
             return this.x == n.x && this.y == n.y && this.w == n.w;
         }
