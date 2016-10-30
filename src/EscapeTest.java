@@ -9,6 +9,7 @@ public class EscapeTest
     public void initialize() throws Exception
     {
         Escape e = new Escape();
+        //e.initialize("test.txt");
         e.initialize("data.txt");
     }
 

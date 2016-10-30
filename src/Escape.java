@@ -54,12 +54,8 @@ public class Escape
                         }
                     }
                 }
-                System.out.println("Starting reading case " + case_num);
-                System.out.println("Size: " + graph_matrix.length + " " + graph_matrix[0].length);
-                System.out.println("Num classes: " + classes);
                 case_num++;
                 findPath(graph_matrix, new Node(start_x, start_y, 0));
-                System.out.println();
             }
         } catch (IOException e)
         {
@@ -82,36 +78,25 @@ public class Escape
         Node[][] node_graph = new Node[graph.length][graph[0].length];
 
         for (int y = 0; y < graph[0].length; y++)
-        {
             for (int x = 0; x < graph.length; x++)
-            {
-                Node n = new Node(x, y, graph[x][y]);
-                q.add(n);
-                node_graph[x][y] = n;
-            }
-        }
+                node_graph[x][y] = new  Node(x, y, graph[x][y]);
 
-        q.remove();
+
+        // add the enterprise
         enterprise.d = 0;
         q.add(enterprise);
 
-        int iterations = 0;
         while (!q.isEmpty())
         {
-            iterations++;
             Node u = q.remove();
-
             if (u.x == 0 || u.x == graph.length-1 || u.y == 0 || u.y == graph[0].length-1)
             {
-                System.out.println("edge reached in " + iterations + " iterations");
                 System.out.println(u.d);
                 return;
             }
             if (visited[u.x][u.y])
                 continue;
             visited[u.x][u.y] = true;
-
-
             s.add(u);
 
             // 'relax' (check neighbors)
@@ -122,28 +107,18 @@ public class Escape
             adjacentNodes.add(node_graph[u.x-1][u.y]);
 
             for (Node v : adjacentNodes)
-            {
                 if (!s.contains(v))
-                {
-                    if (q.remove(v))
+                    if (v.d > u.d + v.w)
                     {
-                        if (v.d > u.d + v.w)
-                        {
-                            v.d = u.d + v.w;
-                            q.add(v);
-                        }
+                        v.d = u.d + v.w;
+                        q.add(v);
                     }
-                }
-            }
         }
-
-
     }
 
     private class Node implements Comparable
     {
         int x,y,w,d;
-        boolean visited;
         Node p;
         Node(int x, int y, int w)
         {
@@ -152,7 +127,6 @@ public class Escape
             this.w = w;
             this.p = null;
             this.d = Integer.MAX_VALUE;
-            this.visited = false;
         }
 
         @Override
