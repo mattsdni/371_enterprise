@@ -79,21 +79,31 @@ public class Escape
         HashSet<Node> s = new HashSet<>();
         boolean[][] visited = new boolean[graph.length][graph[0].length];
 
+        Node[][] node_graph = new Node[graph.length][graph[0].length];
+
         for (int y = 0; y < graph[0].length; y++)
+        {
             for (int x = 0; x < graph.length; x++)
-                q.add(new Node(x, y, graph[x][y]));
+            {
+                Node n = new Node(x, y, graph[x][y]);
+                q.add(n);
+                node_graph[x][y] = n;
+            }
+        }
 
         q.remove();
         enterprise.d = 0;
         q.add(enterprise);
 
+        int iterations = 0;
         while (!q.isEmpty())
         {
+            iterations++;
             Node u = q.remove();
 
             if (u.x == 0 || u.x == graph.length-1 || u.y == 0 || u.y == graph[0].length-1)
             {
-                System.out.println("edge reached");
+                System.out.println("edge reached in " + iterations + " iterations");
                 System.out.println(u.d);
                 return;
             }
@@ -102,23 +112,26 @@ public class Escape
             visited[u.x][u.y] = true;
 
 
-            //s.add(u);
+            s.add(u);
 
             // 'relax' (check neighbors)
             List<Node> adjacentNodes = new LinkedList<>();
-            adjacentNodes.add(new Node(u.x, u.y-1, graph[u.x][u.y-1]));
-            adjacentNodes.add(new Node(u.x, u.y+1, graph[u.x][u.y-1]));
-            adjacentNodes.add(new Node(u.x+1, u.y, graph[u.x+1][u.y]));
-            adjacentNodes.add(new Node(u.x-1, u.y, graph[u.x-1][u.y]));
+            adjacentNodes.add(node_graph[u.x][u.y-1]);
+            adjacentNodes.add(node_graph[u.x][u.y+1]);
+            adjacentNodes.add(node_graph[u.x+1][u.y]);
+            adjacentNodes.add(node_graph[u.x-1][u.y]);
 
             for (Node v : adjacentNodes)
             {
-                if (q.remove(v))
+                if (!s.contains(v))
                 {
-                    if (v.d > u.d + v.w && !visited[v.x][v.y])
+                    if (q.remove(v))
                     {
-                        v.d = u.d + v.w;
-                        q.add(v);
+                        if (v.d > u.d + v.w)
+                        {
+                            v.d = u.d + v.w;
+                            q.add(v);
+                        }
                     }
                 }
             }
