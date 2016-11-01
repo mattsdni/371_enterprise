@@ -80,7 +80,7 @@ public class Escape
      */
     private void findPath(int[][] graph, Node enterprise)
     {
-        PriorityQueue<Node> q = new PriorityQueue<>();
+        PriorityQueue<Node> q = new PriorityQueue<>(graph.length*graph[0].length);
         HashSet<Node> s = new HashSet<>();
         boolean[][] visited = new boolean[graph.length][graph[0].length];
 
@@ -88,7 +88,7 @@ public class Escape
 
         for (int y = 0; y < graph[0].length; y++)
             for (int x = 0; x < graph.length; x++)
-                node_graph[x][y] = new  Node(x, y, graph[x][y]);
+                node_graph[x][y] = new Node(x, y, graph[x][y]);
 
         // add the enterprise
         enterprise.d = 0;
