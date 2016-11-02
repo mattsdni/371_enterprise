@@ -155,6 +155,13 @@ public class Escape
             return this.x == n.x && this.y == n.y && this.w == n.w;
         }
 
+        @Override
+        public int hashCode()
+        {
+            return this.x * this.y + this.w;
+        }
+
+
         public String toString()
         {
             return "x: " + this.x + " y: " + this.y + " distance: " + this.d;
